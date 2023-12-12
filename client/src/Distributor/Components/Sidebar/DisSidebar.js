@@ -102,10 +102,18 @@ const DisSidebar = () => {
             </li>
           </Link>
 
+          <Link to="/distributor/salesteam" style={{ textDecoration: 'none' }}>
             <li>
             <i className="fa fa-shopping-bag icon1"></i>
               <span>Sales Team</span>
             </li>
+            </Link>
+            <Link to="/distributor/task" style={{ textDecoration: 'none' }}>
+            <li>
+            <i className="fa fa-shopping-bag icon1"></i>
+              <span>Tasks</span>
+            </li>
+            </Link>
 
 
           <p className="titleDis">USEFUL</p>

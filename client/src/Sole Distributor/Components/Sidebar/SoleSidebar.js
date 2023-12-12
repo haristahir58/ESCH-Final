@@ -50,7 +50,6 @@ const Sidebar = () => {
       });
 
       const data = await res.json();
-      console.log(data);
       setUserData(data);
 
       if (!res.ok) {
@@ -108,7 +107,7 @@ const Sidebar = () => {
               <span>Products</span>
             </li>
           </Link>
-          <Link to="/soleDistributor/products" style={{ textDecoration: 'none' }}>
+          <Link to="/soleDistributor/trending" style={{ textDecoration: 'none' }}>
             <li>
               <LocalMallIcon className="icon1" />
               <span> Trending Products</span>

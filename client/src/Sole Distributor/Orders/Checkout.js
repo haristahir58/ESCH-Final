@@ -107,7 +107,7 @@ const Checkout = ({inputs, title}) => {
             
           <form>                
                 
-                <div className="formInput">
+                <div className="formInput" style={{  marginRight: '187px'}}>
                   <label>Name</label>
                   <input type="text" placeholder='name' name="name" id="name" autoComplete='off' value={userData ? userData.name : ""} />
                 </div>

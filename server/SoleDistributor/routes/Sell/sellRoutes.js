@@ -6,77 +6,99 @@ const Product = require('../../../Admin/model/Products/productSchema');
 const Sole = require('../../model/soleLogin/soleSchema') 
 const Sell = require('../../model/Sell/sellSchema')
 const Distributor = require('../../model/Distributor/disSchema')
+const Request = require('../../../Distributor/model/request/requestModel')
 const authenticate = require('../../middleware/authenticate')
 const { startOfDay, subWeeks, startOfWeek } = require('date-fns');
 
+
+
+
 router.post('/soleDistributor/sell-product', authenticate, async (req, res) => {
-    try {
-        const { distributorId, productId, quantity, price } = req.body;
-        const userId = req.userId; // Get the ID of the sole distributor from the authentication middleware
+  try {
+    const { productId, quantity, price } = req.body;
+    const soleDistributorId = req.userId; // Renamed to soleDistributorId for clarity
+    console.log(req.body);
 
-        // Check if the sole distributor exists and is authorized
-        const soleDistributor = await Sole.findById(userId);
+    // Check if the sole distributor exists and is authorized
+    const soleDistributor = await Sole.findById(soleDistributorId);
 
-        if (!soleDistributor) {
-            return res.status(401).json({ message: 'Unauthorized' });
-        }
-
-        // Check if the product exists and has enough quantity in the sole distributor's inventory
-        const product = await Product.findById(productId);
-
-        if (!product) {
-            return res.status(404).json({ message: 'Product not found' });
-        }
-
-        if (product.quantity < quantity) {
-            return res.status(400).json({ message: 'Insufficient inventory' });
-        }
-
-        // Calculate the total price for the sale
-        const total = price * quantity;
-
-        // Create a new sell record
-        const sell = new Sell({
-            userId,
-            distributorId,
-            product: productId,
-            quantity,
-            price,
-            status: 'pending',
-        });
-
-        // Save the sell record
-        await sell.save();
-
-        // Update the product's quantity in the sole distributor's inventory
-        // product.quantity -= quantity;
-        // await product.save();
-
-        // Find the accepted order for the sole distributor
-        const order = await Order.findOne({
-            userId: userId,
-            status: 'accepted',
-            'orderItems.product': productId,
-        });
-
-        if (order) {
-            // Update the quantity in the order
-            const orderItem = order.orderItems.find((item) => item.product == productId);
-            if (orderItem) {
-                orderItem.quantity -= quantity;
-                await order.save();
-            }
-        }
-
-        res.json({ message: 'Product sold successfully' });
-    } catch (error) {
-        console.error('Error selling product:', error);
-        res.status(500).json({ message: 'Error selling product' });
+    if (!soleDistributor) {
+      return res.status(401).json({ message: 'Unauthorized' });
     }
+
+    // Check if the product exists and has enough quantity in the sole distributor's inventory
+    const product = await Product.findById(productId);
+
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    if (product.quantity < quantity) {
+      return res.status(400).json({ message: 'Insufficient inventory' });
+    }
+
+    // Calculate the total price for the sale
+    const total = price * quantity;
+
+    // Find all requests with accepted status and matching the sole distributor's ID
+    const acceptedDistributors = await Request.find({
+      // userId: userId,
+      status: 'accepted'
+    }).select('userId');
+
+    console.log('Accepted Distributors:', acceptedDistributors);
+
+    if (acceptedDistributors.length === 0) {
+      return res.status(400).json({ message: 'No distributors with accepted requests' });
+    }
+
+    // Create sell records for each accepted distributor
+    const sellPromises = acceptedDistributors.map(async (acceptedDistributor) => {
+      const distributorId = acceptedDistributor.userId; // Use userId as distributorId
+
+      // Create a new sell record
+      const sell = new Sell({
+        userId: soleDistributorId,
+        distributorId,
+        product: productId,
+        quantity,
+        price,
+        status: 'pending',
+      });
+
+      // Save the sell record
+      await sell.save();
+    });
+
+    // Wait for all sell records to be created
+    await Promise.all(sellPromises);
+
+    // Update the product's quantity in the sole distributor's inventory
+    product.quantity -= quantity;
+    await product.save();
+
+    // Find the accepted order for the sole distributor
+    const order = await Order.findOne({
+      userId: soleDistributorId,
+      status: 'accepted',
+      'orderItems.product': productId,
+    });
+
+    if (order) {
+      // Update the quantity in the order
+      const orderItem = order.orderItems.find((item) => item.product == productId);
+      if (orderItem) {
+        orderItem.quantity -= quantity;
+        await order.save();
+      }
+    }
+
+    res.json({ message: 'Product sold successfully to accepted distributors' });
+  } catch (error) {
+    console.error('Error selling product:', error);
+    res.status(500).json({ message: 'Error selling product' });
+  }
 });
-
-
-
 
 
 router.get('/soleDistributor/sold-products', authenticate, async (req, res) => {
@@ -114,6 +136,9 @@ router.get('/soleDistributor/sold-products', authenticate, async (req, res) => {
         res.status(500).json({ message: 'Error fetching sold products' });
     }
 });
+
+
+
 
 
 // Import your necessary modules and models here

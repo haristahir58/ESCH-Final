@@ -36,7 +36,9 @@ const SellProducts = () => {
       });
   }, []);
 
-  const handleSell = async () => {
+  const handleSell = async (e) => {
+    console.log('Handle Sell function called');
+    e.preventDefault();
     try {
       const response = await fetch('/soleDistributor/sell-product', {
         method: 'POST',
@@ -44,7 +46,7 @@ const SellProducts = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          distributorId,
+          // distributorId,
           productId,
           quantity,
           price,
@@ -94,7 +96,7 @@ const SellProducts = () => {
                 </select>
               </div>
 
-              <div className="formInput">
+              {/* <div className="formInput">
                 <label>Distributor</label>
                 <select
                   name="distributorId"
@@ -109,7 +111,7 @@ const SellProducts = () => {
                     </option>
                   ))}
                 </select>
-              </div>
+              </div> */}
 
               <div className="formInput">
                 <label>Price</label>
@@ -132,6 +134,7 @@ const SellProducts = () => {
                   name="quantity"
                   id="quantity"
                   value={quantity}
+                  style={{marginRight: '345px'}}
                   onChange={(e) => setQuantity(e.target.value)}
                 />
               </div>

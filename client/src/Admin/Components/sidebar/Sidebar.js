@@ -73,6 +73,12 @@ const Sidebar = () => {
                     <span>Orders History</span>
                 </li>
                 </Link>
+                <Link to="/admin/trend/" style={{textDecoration:"none"}}>
+                <li>
+                <LocalMallIcon className="icon" />
+                    <span>Trend Forecasting</span>
+                </li>
+                </Link>
             
                 <p className="title">USEFUL</p>
 
@@ -83,6 +89,7 @@ const Sidebar = () => {
                     <span>Logout</span>
                 </Link>
                 </li>
+                
 
             </ul>
             </div>

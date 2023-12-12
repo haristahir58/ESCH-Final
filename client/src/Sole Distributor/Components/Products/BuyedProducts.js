@@ -48,6 +48,14 @@ const BuyedProducts = () => {
                 <div className="cardText" style={{fontSize: "16px",  fontWeight: "bold",  color: "red",   marginBottom: "10px"}}>
                   Quantity: {item.quantity}
                 </div>
+                <div className='btn5'>
+                  <button
+                    className="addToCartButton"
+                   
+                  >
+                    Sell Products
+                  </button>
+                </div>
 
                 
               </div>

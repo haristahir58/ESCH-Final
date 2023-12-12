@@ -9,7 +9,7 @@ const sellSchema = new mongoose.Schema({
   distributorId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'distributors', // Reference to the distributor model
-    required: true,
+   
   },
   product: {
     type: mongoose.Schema.Types.ObjectId,

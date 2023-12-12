@@ -81,8 +81,10 @@ import DisOrders from './Distributor/Components/Orders/DisOrders';
 import DisOrderHistory from './Distributor/Components/Orders/DisOrderHistory';
 import DisOrderDetails from './Distributor/Components/Orders/DisOrdersDetails';
 import DisOrderHistoryDetails from './Distributor/Components/Orders/DisOrderHistoryDetails';
-
-
+import Trend from './Admin/Components/ML/Trend';
+import Sales from './Distributor/Components/Sales/Sales';
+import Task from './Distributor/Task/Task';
+import Trending from './Sole Distributor/Components/Trending/Trending';
 function App() {
   const {darkMode} = useContext(DarkModeContext);
 
@@ -123,6 +125,7 @@ function App() {
        <Route exact path='/admin/order/history' element={<OrderHistory/>}></Route>
        <Route exact path='/admin/order/history/:id' element={<OrderHistoryDetails/>}></Route>
        <Route exact path='/admin/order/:id' element={<OrderDetails/>}></Route>
+       <Route exact path='/admin/trend/' element={<Trend/>}></Route>
 
        
        
@@ -153,6 +156,8 @@ function App() {
        <Route exact path = {'/soleDistributor/my-products'} element= {<BuyedProducts/>}/>
        <Route exact path = {'/soleDistributor/inventory'} element= {<Inventory/>}/>
        <Route exact path = {'/soleDistributor/sell-products'} element= {<SellProducts/>}/>
+       <Route exact path = {'/soleDistributor/trending'} element= {<Trending/>}/>
+
 
       {/*Distributor's Components Routes */}
 
@@ -173,7 +178,8 @@ function App() {
         <Route path="/distributor/orders/:id" element={<DisOrderDetails />} />
         <Route path="/distributor/orders/history" element={<DisOrderHistory />} />
         <Route path="/distributor/orders/history/:id" element={<DisOrderHistoryDetails />} />
-
+        <Route path="/distributor/salesteam" element={<Sales />} />
+        <Route path="/distributor/task" element={<Task />} />
         {/*Shopkeeper's Components Routes */}
         <Route exact path='/shopkeeper/register' element={<ShopSignup/>} />
         <Route exact path='/shopkeeper/login' element={<ShopLogin/>} />

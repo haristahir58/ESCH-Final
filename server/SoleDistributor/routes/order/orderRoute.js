@@ -472,64 +472,93 @@ router.put('/admin/orders/:id', async (req, res) => {
 });
 
 
-
-// Route to fetch products from the accepted order
 router.get('/soleDistributor/my-products', authenticate, async (req, res) => {
   try {
-      const userId = req.userId;
+    const userId = req.userId;
 
-      // Find the accepted orders for the sole distributor
-      const orders = await Order.find({
-          userId: userId,
-          status: 'accepted'
-      }).populate('orderItems.product');
+    // Find the accepted orders for the sole distributor
+    const orders = await Order.find({
+      userId: userId,
+      status: 'accepted'
+    }).populate('orderItems.product');
 
-      // Create an inventory to keep track of products
-      const inventory = {};
+    // Create an inventory to keep track of products
+    const inventory = {};
 
-      // Update the inventory based on accepted orders
-      orders.forEach((order) => {
-          order.orderItems.forEach((orderItem) => {
-              const { product, quantity } = orderItem;
+    // Update the inventory based on accepted orders
+    orders.forEach((order) => {
+      order.orderItems.forEach((orderItem) => {
+        const { product, quantity } = orderItem;
 
-              // Check if the product is already in the inventory
-              if (inventory[product]) {
-                  // If found, update the quantity
-                  inventory[product].quantity += quantity;
-              } else {
-                  // If not found, add it to the inventory
-                  inventory[product] = {
-                      product,
-                      quantity,
-                  };
-              }
-          });
+        // Check if the product is already in the inventory
+        if (inventory[product]) {
+          // If found, update the quantity
+          inventory[product].quantity += quantity;
+        } else {
+          // If not found, add it to the inventory
+          inventory[product] = {
+            product,
+            quantity,
+          };
+        }
       });
+    });
 
-      // Map the product details to include product titles
-      const productsWithTitles = [];
+    // Map the product details to include product titles and _id
+    const productsWithTitles = [];
 
-      for (const productInfo of Object.values(inventory)) {
-          const product = await Product.findById(productInfo.product);
+    for (const productInfo of Object.values(inventory)) {
+      const product = await Product.findById(productInfo.product);
 
-          if (product) {
-              productsWithTitles.push({
-                  title: product.title,
-                  quantity: productInfo.quantity,
-                  description: product.description,
-                  price: product.price,
-                  category: product.category,
-                  imageUrl: product.imageUrl,
-              });
-          }
+      if (product) {
+        productsWithTitles.push({
+          _id: product._id, // Include the _id field
+          title: product.title,
+          quantity: productInfo.quantity,
+          description: product.description,
+          price: product.price,
+          category: product.category,
+          imageUrl: product.imageUrl,
+        });
       }
+    }
 
-      res.json(productsWithTitles);
+    res.json(productsWithTitles);
   } catch (error) {
-      console.error('Error fetching products:', error);
-      res.status(500).json({ message: 'Error fetching products' });
+    console.error('Error fetching products:', error);
+    res.status(500).json({ message: 'Error fetching products' });
   }
 });
+
+
+//specific inventory page
+
+// Route to fetch details for a specific product
+router.get('/soleDistributor/my-products/:id', authenticate, async (req, res) => {
+  try {
+    const productId = req.params.id;
+    const product = await Product.findById(productId);
+
+    if (product) {
+      res.json({
+        _id: product._id,
+        title: product.title,
+        description: product.description,
+        price: product.price,
+        category: product.category,
+        imageUrl: product.imageUrl,
+      });
+    } else {
+      res.status(404).json({ message: 'Product not found' });
+    }
+  } catch (error) {
+    console.error('Error fetching product details:', error);
+    res.status(500).json({ message: 'Error fetching product details' });
+  }
+});
+
+
+
 
 
 // Route to get products with low stock
