@@ -7,9 +7,11 @@ import Background from '../../Images/background.png'
 import Category1 from '../../Images/category-1.jpg'
 import Category2 from '../../Images/category-2.jpg'
 import Category3 from '../../Images/category-3.jpg'
+import { useCart } from "../../Sole Distributor/Components/Cart/CartContext";
 import "./Style/Home.css";
 
 export default function ShopHome() {
+  const { cart } = useCart();
   const [products, setProducts] = useState([]);
   const [latestproducts, setLatestProducts] = useState([]);
 
@@ -61,7 +63,7 @@ export default function ShopHome() {
               <li><Link to="/shopkeeper" style={{textDecoration:'none',color:'black',fontSize:'18px'}}>Home</Link></li>
               <li><Link to="/shopkeeper/products" style={{textDecoration:'none',color:'black',fontSize:'18px'}}>Products</Link></li>
               <li className="item">
-            <Link to="/shopkeeper/cart" className="nav-link">
+              <Link to="/shopkeeper/cart" className="nav-link">
               <i
                 className="fa fa-shopping-cart"
                 style={{
@@ -72,12 +74,25 @@ export default function ShopHome() {
                   marginLeft: "10px",
                 }}
               >
+                  {cart.length > 0 && (
+                  <span
+                    className={`cart-quantity ${
+                      cart.reduce((total, item) => total + item.quantity, 0) > 0
+                        ? "show"
+                        : ""
+                    }`}
+                  >
+                    {cart.reduce((total, item) => total + item.quantity, 0)}
+                  </span>
+                )}
               </i>
             </Link>
           </li>
-              <li><Link to="/shopkeeper/complain" style={{textDecoration:'none',color:'black',fontSize:'18px'}}>Add Complain</Link></li>
-              <li><Link to="/shopkeeper/view-complain" style={{textDecoration:'none',color:'black',fontSize:'18px'}}>View Complain</Link></li>
+             <li><Link to="/shopkeeper/view-complain" style={{textDecoration:'none',color:'black',fontSize:'18px'}}>Complains</Link></li>
+              <li><Link to="/shopkeeper/orders" style={{textDecoration:'none',color:'black',fontSize:'18px'}}>View Order</Link></li>
+              <li><Link to="/shopkeeper/orders/history" style={{textDecoration:'none',color:'black',fontSize:'18px'}}>Order history</Link></li>
               <li><Link to="/shopkeeper/logout" style={{textDecoration:'none',color:'black',fontSize:'18px'}}>Logout</Link></li>
+
 
             </ul>
           </nav>
@@ -91,7 +106,7 @@ export default function ShopHome() {
             <div class="col-2">
                 <h1>DISCOVER AND SHOP <br/> THE TREND</h1>
                 <p>In a world where you have unlimited choice, you need to compete for attention.<br/>And this requires something more than selling other people’s products as a result <br/>greatness will come. </p>
-                <a href="" class="btn">SHOP NOW</a>
+                <Link to={'/shopkeeper/products'} class="btn">SHOP NOW</Link>
             </div>
 
             <div class="col-2">

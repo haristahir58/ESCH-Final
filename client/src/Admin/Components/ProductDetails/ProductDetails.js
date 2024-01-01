@@ -114,28 +114,6 @@ const ProductDetails = () => {
                   </p>
                 </div>
               </div>
-
-              <div
-                className="sales-info"
-                style={{ marginTop: "-75px", marginLeft: "97px", width: '208%' }}
-              >
-                <h3 style={{ color: "#856666", marginBottom: "33px" }}>
-                  Product Sales
-                </h3>
-
-                <h5 className="trend" style={{ color: "#856666" }}>
-                  View Trend:
-                  <select className="time-period" style={{marginLeft:'63px'}}>
-                    <option value="1">Next 1 month</option>
-                    <option value="2">Next 2 months</option>
-                    <option value="3">Next 3 months</option>
-                    <option value="6">Next 6 months</option>
-                    <option value="9">Next 9 months</option>
-                    <option value="12">Next 1 year</option>
-                  </select>
-                  <button className="predictBtn">Predict</button>
-                </h5>
-              </div>
             </div>
           </div>
         </div>

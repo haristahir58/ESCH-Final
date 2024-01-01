@@ -49,15 +49,16 @@ const Sales = () => {
   };
   
   const listItemStyle = {
-    marginBottom: '20px',
+    marginTop: '20px',
     padding: '20px',
-    border: '2px solid #3498db',
-    borderRadius: '10px',
+    border: '22px solid rgb(211, 211, 211);',
+    borderRadius: '14px',
     display: 'flex',
     flexDirection: 'column',
-    width: '300px', 
-    marginRight: '20px',
-    backgroundColor: '#f4f4f4', // Background color
+    width: '335px', 
+    marginRight: '50px',
+    backgroundColor: 'rgb(244, 244, 244)', // Background color
+    boxShadow: "2px 4px 10px 1px rgba(68, 54, 54, 0.47)"
   };
   
   const inputStyle = {
@@ -74,7 +75,7 @@ const Sales = () => {
     color: 'white',
     padding: '12px 20px',
     border: 'none',
-    borderRadius: '5px',
+    borderRadius: '45px',
     cursor: 'pointer',
     fontSize: '16px',
     width: '100%',
@@ -86,11 +87,19 @@ const Sales = () => {
         <Sidebar />
         <div className="listContainer">
           <Navbar />
+          
+          <div class='Sales-heading'
+          style={{
+            boxShadow: "2px 4px 10px 1px rgba(201, 201, 201, 0.47)",
+            margin: "20px",
+            padding: "10px",
+            display: "flex"
+          }}    
+          >
+          <h2 style={{color: "lightgray", fontSize: "20px"}}>Sales Team</h2>
+          </div>
 
-          <h2 style={{ textAlign: 'center' }}>Sales Team</h2>
-
-
-          <ul>
+          <ul className='sales-card-container' style={{display:'flex', marginTop: "28px"}}>
             {users.map((user, index) => (
               <li key={index} style={listItemStyle}>
                 <strong>Name:</strong> {user.name}, <strong>Email:</strong> {user.email}

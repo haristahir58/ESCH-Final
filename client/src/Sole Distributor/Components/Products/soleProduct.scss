@@ -90,6 +90,46 @@ color: rgb(81, 18, 92);
   justify-content: center;
 }
 
+
+// Add these styles to your existing stylesheet or define them in the component
+
+/* In your SCSS or CSS file */
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.paginationButton {
+  padding: 10px;
+  margin: 0 5px;
+  border: 1px solid #3498db;
+  background-color: #fff;
+  color: #3498db;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+
+  &:hover {
+    background-color: #3498db;
+    color: #fff;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
+.pagination .active {
+  background-color: #3498db;
+  color: #fff;
+}
+
+
+
+
 /* Optional: Center the cards if there are fewer than 3 cards per row */
 @media screen and (max-width: 768px) {
   .cardContainer1 {

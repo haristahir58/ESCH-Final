@@ -1,4 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { Link} from "react-router-dom";
+import TableCell from '@mui/material/TableCell';
+import Table from "@mui/material/Table";
+import TableRow from '@mui/material/TableRow';
+import TableHead from '@mui/material/TableHead';
+import TableBody from '@mui/material/TableBody';
+import TableContainer from '@mui/material/TableContainer';
+import Paper from '@mui/material/Paper';
 import Sidebar from "../Components/Sidebar/DisSidebar";
 import Navbar from "../Components/navbar/Navbar";
 
@@ -39,38 +47,46 @@ const ViewRequest = () => {
         <Sidebar />
         <div className="homeContainer">
           <Navbar />
+          <div className="productTableTitle">
+                View Requests
 
-          <table className="table">
-            <thead>
-              <tr>
-                <th className="tableCell">Request ID</th>
-                <th className="tableCell">Name</th>
-                <th className="tableCell">Email</th>
-                <th className="tableCell">City</th>
-                <th className="tableCell">Address</th>
-                <th className="tableCell">Date</th>
-                <th className="tableCell">Experience</th>
-                <th className="tableCell">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {requests.map((row) => (
-                <tr key={row.id}>
-                  <td className="tableCell">{row._id}</td>
-                  <td className="tableCell">{row.userId.name}</td>
-                  <td className="tableCell">{row.userId.email}</td>
-                  <td className="tableCell">{row.userId.city}</td>
-                  <td className="tableCell">{row.userId.address}</td>
-                  <td className="tableCell">{row.requestDate}</td>
-                  <td className="tableCell">{row.experience}</td>
-                  <td className="tableCell">
-                    <span className={`status ${row.status}`}>{row.status}</span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+              </div>
+          <div className="tableContainer">
+
+          <TableContainer component={Paper} className="table">
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell className="tableCell">Request ID</TableCell>
+                  <TableCell className="tableCell">Name</TableCell>
+                  <TableCell className="tableCell">Email</TableCell>
+                  <TableCell className="tableCell">City</TableCell>
+                  <TableCell className="tableCell">Address</TableCell>
+                  <TableCell className="tableCell">Date</TableCell>
+                  <TableCell className="tableCell">Experience</TableCell>
+                  <TableCell className="tableCell">Status</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {requests.map((row) => (
+                  <TableRow key={row.id}>
+                    <TableCell className="tableCell">{row._id}</TableCell>
+                    <TableCell className="tableCell">{row.userId.name}</TableCell>
+                    <TableCell className="tableCell">{row.userId.email}</TableCell>
+                    <TableCell className="tableCell">{row.userId.city}</TableCell>
+                    <TableCell className="tableCell">{row.userId.address}</TableCell>
+                    <TableCell className="tableCell">{row.requestDate}</TableCell>
+                    <TableCell className="tableCell">{row.experience}</TableCell>
+                    <TableCell className="tableCell">
+                      <span className={`status ${row.status}`}>{row.status}</span>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </div>
+      </div>
       </div>
     </>
   );

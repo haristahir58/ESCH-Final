@@ -66,16 +66,7 @@
     transition: background-color 0.3s ease-in-out;
   }
   
-  .customFileButton:hover {
-    background-color: #0056b3; /* Change to your preferred button hover color */
-  }
-  
-  
-  
-  .buttonLink:hover {
-    background-color: #0056b3; /* Change to your preferred button hover color */
-  }
-  
+
   /* Center the container vertically and horizontally */
   .home-page {
     display: flex;

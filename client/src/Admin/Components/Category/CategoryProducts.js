@@ -6,12 +6,30 @@ import { useParams } from 'react-router-dom';
 const CategoryProducts = () => {
   const { id } = useParams();
   const [categoryData, setCategoryData] = useState({});
+  const [selectedFilter, setSelectedFilter] = useState('');
 
   useEffect(() => {
+    // Reset selectedFilter when the category changes
+    setSelectedFilter('');
+  }, [id]);
+
+  // Define filter options based on category ID
+  const filterOptionsMap = {
+    '65253895dfe7c07064bdf03c': ['256GB 8GB', '64GB 3GB', '64GB 4GB'],
+    '652538a8dfe7c07064bdf03e': ['4GB RAM', '6GB RAM', '8GB RAM'],
+    '652538b4dfe7c07064bdf040': ['32 Inch', '43 inch', '65inch'],
+    '652538bddfe7c07064bdf042': ['core i3', 'core i7', 'amd a10'],
+    '652538c7dfe7c07064bdf044': ['1.69 inches', '1.9 inches', '1.4 inches'],
+  };
+
+  const filterOptions = filterOptionsMap[id] || [];
+
+  useEffect(() => {
+    
     // Fetch and display products for the selected category using the 'id' parameter
     async function fetchCategoryProducts() {
       try {
-        const response = await fetch(`http://localhost:4000/admin/categories/${id}`);
+        const response = await fetch(`http://localhost:4000/admin/categories/${id}/${encodeURIComponent(selectedFilter)}`);
         if (response.ok) {
           const data = await response.json();
           setCategoryData(data);
@@ -24,7 +42,14 @@ const CategoryProducts = () => {
     }
 
     fetchCategoryProducts();
-  }, [id]);
+  }, [id, selectedFilter]);
+
+  const handleFilterChange = (e) => {
+    setSelectedFilter(e.target.value);
+  };
+
+
+
 
   return (
     <div className="new">
@@ -36,9 +61,44 @@ const CategoryProducts = () => {
         </div>
         <div className="list">
           <div className="listContainer">
-            <div className="productTableTitle">
-            {categoryData.name}
+            <div className="productTableTitle">{categoryData.name}
+            
+            {filterOptions.length > 0 && (
+  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+    <label htmlFor="filter" style={{ marginRight: '9px', fontSize:'16px', color:'#672f2f' }}>
+      Select Filter:
+    </label>
+    <select
+      id="filter"
+      value={selectedFilter}
+      onChange={handleFilterChange}
+      style={{
+        padding: '8px',
+        border: '1px solid rgb(69, 9, 9)',
+        borderRadius: '4px',
+        cursor: 'pointer',
+        fontSize: '14px',
+        width:'157px'
+      }}
+    >
+      <option value="">Select...</option>
+      {filterOptions.map((option, index) => (
+        <option key={index} value={option}>
+          {option}
+        </option>
+      ))}
+    </select>
+  </div>
+)}
+            
+            
+            
+            
             </div>
+
+            
+
+
             <div className="tableContainer">
               <table className="table">
                 <thead>
@@ -55,7 +115,9 @@ const CategoryProducts = () => {
                     categoryData.products.map((product, index) => (
                       <tr key={product._id}>
                         <td className="tableCell">{index + 1}</td>
-                        <td className="tableCell"><img src={`http://localhost:4000/${product?.imageUrl}`} alt={product.title} /></td>
+                        <td className="tableCell">
+                          <img src={`http://localhost:4000/${product?.imageUrl}`} alt={product.title} />
+                        </td>
                         <td className="tableCell">{product.title}</td>
                         <td className="tableCell">{product.description}</td>
                         <td className="tableCell">{product.price} Rs</td>

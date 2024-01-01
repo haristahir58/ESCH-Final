@@ -17,6 +17,12 @@ router.post('/admin/products/new', upload.single('image'), async (req,res)=>{
     if (!title|| !categoryId || !imageUrl || !description || !price || !quantity){
         return res.status(422).json({error: "Please fill the field properties"});
     }
+
+ // Check if price and quantity are non-negative
+ if (price < 0 || quantity < 0) {
+  return res.status(422).json({ message: 'Price and quantity must be non-negative values' });
+}
+
     try {
       // Check if the specified category exists
       const existingCategory = await Category.findById(categoryId);
@@ -58,6 +64,9 @@ router.get('/admin/products',async(req,res)=>{
     }
   })
 
+  
+
+
   //Latest Products
   router.get('/admin/products/latest', async (req, res) => {
     try {
@@ -72,6 +81,8 @@ router.get('/admin/products',async(req,res)=>{
   });
   
 
+  
+
   //For Getting Specific Product's data 
 router.get('/admin/products/:id', async (req, res) => {
     try {
@@ -81,10 +92,16 @@ router.get('/admin/products/:id', async (req, res) => {
       }
       res.json(product);
     } catch (err) {
+      console.error(err);
       res.status(500).json({ message: "Can't find Products" });
     }
   });
 
+
+  
+
+
+  
 // For Updating Specific product's data with put method
 router.put('/admin/products/:id', upload.single('image'), async (req, res) => {
   const { title, description, price, quantity } = req.body;
@@ -98,6 +115,11 @@ router.put('/admin/products/:id', upload.single('image'), async (req, res) => {
 
   if (!title || !description || !price || !quantity || !categoryId) {
     return res.status(422).json({ message: 'Please fill all the fields' });
+  }
+
+   // Check if price and quantity are non-negative
+   if (price < 0 || quantity < 0) {
+    return res.status(422).json({ message: 'Price and quantity must be non-negative values' });
   }
 
 
@@ -155,6 +177,8 @@ router.delete('/admin/products/:id', async (req, res) => {
       res.status(500).json({ message: "Can't Delete product" });
     }
   })
+
+
 
 
 

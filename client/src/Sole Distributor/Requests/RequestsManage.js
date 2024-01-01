@@ -1,6 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import Sidebar from "../Components/Sidebar/SoleSidebar";
 import Navbar from "../Components/navbar/Navbar";
+import { Link} from "react-router-dom";
+import Sidebar from "../Components/Sidebar/SoleSidebar";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
 
 const RequestsManage = () => {
   const [requests, setRequests] = useState([]);
@@ -64,45 +72,55 @@ const RequestsManage = () => {
 
   return (
     <>
-      <div className="home">
+      <div className="list">
         <Sidebar />
-        <div className="homeContainer">
+        <div className="listContainer">
           <Navbar />
+          <div className="productTableTitle">
+                Manage Requests
+                <Link to="/soleDistributor/applications/status" style={{textDecoration:"none"}} className="newLink">
+                View All Requests
+                </Link>
+              </div>
+          <div className="tableContainer">
 
-          <table className="table">
-            <thead>
-              <tr>
-                <th className="tableCell">Name</th>
-                <th className="tableCell">Email</th>
-                <th className="tableCell">City</th>
-                <th className="tableCell">Address</th>
-                <th className="tableCell">Date</th>
-                <th className="tableCell">Experience</th>
-                <th className="tableCell">Status</th>
-                <th className="tableCell">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {requests.map((row) => (
-                <tr key={row._id}>
-                  <td className="tableCell">{row.userId.name}</td>
-                  <td className="tableCell">{row.userId.email}</td>
-                  <td className="tableCell">{row.userId.city}</td>
-                  <td className="tableCell">{row.userId.address}</td>
-                  <td className="tableCell">{row.requestDate}</td>
-                  <td className="tableCell">{row.experience}</td>
-                  <td className="tableCell">
-                    <span className={`status ${row.status}`}>{row.status}</span>
-                  </td>
-                  <td className="tableCell">
-                    <button className="buttonLink" onClick={() => handleAction(row._id, "accept")}>Accept</button>
-                    <button className="buttonLink" onClick={() => handleAction(row._id, "reject")}>Reject</button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <TableContainer component={Paper} className="table">
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell className="tableCell">Name</TableCell>
+                  <TableCell className="tableCell">Email</TableCell>
+                  <TableCell className="tableCell">City</TableCell>
+                  <TableCell className="tableCell">Address</TableCell>
+                  <TableCell className="tableCell">Date</TableCell>
+                  <TableCell className="tableCell">Experience</TableCell>
+                  <TableCell className="tableCell">Status</TableCell>
+                  <TableCell className="tableCell">Action</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {requests.map((row) => (
+                  <TableRow key={row._id}>
+                    <TableCell className="tableCell">{row.userId.name}</TableCell>
+                    <TableCell className="tableCell">{row.userId.email}</TableCell>
+                    <TableCell className="tableCell">{row.userId.city}</TableCell>
+                    <TableCell className="tableCell">{row.userId.address}</TableCell>
+                    <TableCell className="tableCell">{row.requestDate}</TableCell>
+                    <TableCell className="tableCell">{row.experience}</TableCell>
+                    <TableCell className="tableCell">
+                      <span className={`status ${row.status}`}>{row.status}</span>
+                    </TableCell>
+                    <TableCell className="tableCell">
+                      <button className="buttonLink" onClick={() => handleAction(row._id, "accept")}>Accept</button>
+                      <button className="buttonLink" onClick={() => handleAction(row._id, "reject")}>Reject</button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </div>
+      </div>
       </div>
     </>
   );

@@ -20,6 +20,10 @@
         color: green;
         background-color: rgba(0, 128, 0, 0.151);
       }
+      &.resolved {
+        color: rgb(81, 7, 124);
+        background-color: rgba(218, 148, 226, 0.148);
+      }
       &.pending {
         color: goldenrod;
         background-color: rgba(189, 189, 3, 0.103);

@@ -22,9 +22,22 @@
   margin-left: 328px;
   padding: 4px 15px;
 }
+.viewMapBtn2{
+  border-radius: 50px;
+  background-color: rgb(255, 47, 0);
+  display: flex;
+  color: white;
+  justify-content: end;
+  align-content: center;
+  margin-left: 328px;
+  padding: 4px 15px;
+}
 
 .viewMapBtn:hover{
   background-color: rgb(7, 7, 93);
+}
+.viewMapBtn2:hover{
+  background-color: rgb(93, 7, 7);
 }
 
 

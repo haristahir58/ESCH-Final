@@ -39,14 +39,17 @@ const store_country_mapping = {
   };
   
   const buttonStyle = {
-    backgroundColor: '#3498db',
-    color: '#fff',
-    padding: '12px 20px',
-    border: 'none',
-    borderRadius: '6px',
-    cursor: 'pointer',
-    fontSize: '16px',
-    transition: 'background-color 0.3s ease',
+    backgroundColor: "rgb(7, 95, 153)",
+    color:"rgb(255, 255, 255)",
+    padding: "11px 55px",
+    border: "medium",
+    borderRadius: "54px",
+    cursor: "pointer",
+    fontSize: "16px",
+    transition: "background-color 0.3s ease 0s",
+    height: "45px",
+    marginTop: "42px",
+    marginLeft: "77px"
   };
   
   const Trending = () => {
@@ -86,8 +89,35 @@ const store_country_mapping = {
           <div className="listContainer">
             <Navbar />
   
-          <div style={{ maxWidth: '800px', margin: 'auto', padding: '20px', borderRadius: '8px', boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', backgroundColor: '#fff' }}>
-            <h2 style={{ textAlign: 'center', color: '#333' }}>Predict Sales in Pakistan</h2>
+              <div className='new' 
+              style={{
+                boxShadow: "2px 4px 10px 1px rgba(201, 201, 201, 0.47)",
+                padding: "10px",
+                margin: "20px",
+                display: "flex"
+              }}>
+               <h1 
+               style={{
+                color:"lightgray",
+                fontSize: "20px",
+               }}   
+               >Predict Sales</h1>
+               </div>
+  
+          <div style={{ maxWidth: '83vw', padding: '5px', 
+        borderRadius: '8px',
+        boxShadow: "rgba(0, 0, 0, 0.1) 0px 0px 10px",
+        backgroundColor: "rgb(255, 255, 255)",
+        display: "flex",
+        alignContent: "center",
+        justifyContent: "center",
+        marginLeft: "19px",
+        marginTop: "22px",
+        marginBottom: "-9px"
+        
+      }}>
+  
+  
   
             <div style={{ marginBottom: '20px' }}>
               <label style={{ display: 'block', marginBottom: '8px', color: '#555' }}>Product Name:</label>
@@ -101,7 +131,7 @@ const store_country_mapping = {
               </select>
             </div>
   
-            <div style={{ marginBottom: '20px' }}>
+            <div style={{ marginBottom: '20px', marginLeft: "54px" }}>
               <label style={{ display: 'block', marginBottom: '8px', color: '#555' }}>Country:</label>
               <select style={inputStyle} onChange={(e) => setSelectedCountry(e.target.value)}>
                 <option value="">Select Country</option>
@@ -113,12 +143,12 @@ const store_country_mapping = {
               </select>
             </div>
   
-            <div style={{ marginBottom: '20px' }}>
+            <div style={{ marginBottom: '20px', marginLeft: "54px" }}>
               <label style={{ display: 'block', marginBottom: '8px', color: '#555' }}>Start Date:</label>
               <input style={inputStyle} type="date" onChange={(e) => setStartDate(e.target.value)} />
             </div>
   
-            <div style={{ marginBottom: '20px' }}>
+            <div style={{ marginBottom: '20px', marginLeft: "54px" }}>
               <label style={{ display: 'block', marginBottom: '8px', color: '#555' }}>End Date:</label>
               <input style={inputStyle} type="date" onChange={(e) => setEndDate(e.target.value)} />
             </div>
@@ -135,8 +165,7 @@ const store_country_mapping = {
                 margin: 'auto',
                 padding: '20px',
                 borderRadius: '8px',
-                boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-                backgroundColor: '#fff',
+                // boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
                 overflow: 'hidden', // Hide overflow to prevent horizontal scrolling
               }}
             >
@@ -149,6 +178,6 @@ const store_country_mapping = {
         </div>
       </div>
     );
-  };
+  }
   
   export default Trending;

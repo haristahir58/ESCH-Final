@@ -156,7 +156,7 @@ export default function Task() {
                   {selectedShopLocation && (
                     <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
                       <div className="bg-white p-4 rounded shadow-md">
-                        <button className='viewMapBtn' style={{marginLeft:'272px'}} onClick={handleCloseMap}>
+                        <button className='viewMapBtn2' style={{marginLeft:'300px'}} onClick={handleCloseMap}>
                           Close Map
                         </button>
                         <TaskMap officer={selectedShopLocation} />
@@ -248,7 +248,7 @@ const modalListItemStyle = {
 };
 
 const closeButtonStyle = {
-  backgroundColor: '#3498db',
+  backgroundColor: 'rgb(219, 52, 52)',
   color: '#fff',
   padding: '12px',
   borderRadius: '5px',

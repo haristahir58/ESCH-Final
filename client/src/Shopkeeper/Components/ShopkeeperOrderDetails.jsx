@@ -7,6 +7,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import Footer from "./ShopFooter";
 import Navbar from './ShopNavbar';
 
 
@@ -57,7 +58,7 @@ const ShopkeeperOrderDetails = () => {
               </Table>
             </TableContainer>
           </div>
-
+          <Footer />
     </>
   );
 };

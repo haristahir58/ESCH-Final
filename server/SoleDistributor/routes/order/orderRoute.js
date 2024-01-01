@@ -704,7 +704,7 @@ router.get('/admin/monthlyEarnings', async (req, res) => {
     // Create an array of all months from January to December
     const allMonths = [
       '2023-01', '2023-02', '2023-03', '2023-04', '2023-05', '2023-06',
-      '2023-07', '2023-08', '2023-09', '2023-10', '2023-11', '2023-12',
+      '2023-07', '2023-08', '2023-09', '2023-10', '2023-11', '2023-12', '2024-01', '2024-02'
     ];
 
     // Create a map to store earnings for all months

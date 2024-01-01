@@ -98,6 +98,54 @@ router.get('/admin/categories/:id', async (req, res) => {
     }
   });
   
+
+
+  router.get('/admin/categories/:categoryId/:filterValue', async (req, res) => {
+    try {
+        const categoryId = req.params.categoryId;
+        const filterValue = req.params.filterValue;
+
+        // Split filterValue into individual keywords
+        const filterKeywords = filterValue.split(' ');
+
+        // Construct an array of regex patterns for each keyword
+        const regexPatterns = filterKeywords.map(keyword => new RegExp(keyword, 'i'));
+
+        // Construct the query based on filterType and filterValue
+        const query = {
+            category: categoryId,
+            description: { $all: regexPatterns }, // Match all keywords in the description
+        };
+
+        // Additional filtering logic based on filterType (e.g., for RAM, Inches, etc.)
+
+        // Fetch all products for the category
+        const allProducts = await Products.find({ category: categoryId });
+
+        // Fetch category details for constructing the response
+        const category = await Category.findById(categoryId);
+
+        // Fetch filtered products based on the constructed query
+        const filteredProducts = await Products.find(query);
+
+        // Return a structured response with category details, filtered products, and all products
+        res.json({
+            _id: category._id,
+            name: category.name,
+            products: filteredProducts,
+            __v: category.__v,
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+});
+
+
+  
+
+
+
   
 
 module.exports = router;

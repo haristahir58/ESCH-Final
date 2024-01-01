@@ -6,6 +6,7 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import Footer from "./ShopFooter";
 import Paper from "@mui/material/Paper";
 import Navbar from './ShopNavbar';
 import { useNavigate } from "react-router-dom";
@@ -125,6 +126,7 @@ const ShopkeeperOrderHistory = () => {
               </Table>
             </TableContainer>
           </div>
+          <Footer />
     </>
   );
 };

@@ -117,10 +117,6 @@ const DisSidebar = () => {
 
 
           <p className="titleDis">USEFUL</p>
-          <li>
-            <i className="fas fa-chart-bar icon1"></i>
-            <span>Report</span>
-          </li>
 
           <Link to={"/distributor/inventory"} style={{ textDecoration: 'none' }}>
             <li>

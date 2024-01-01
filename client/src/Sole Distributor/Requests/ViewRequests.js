@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link} from "react-router-dom";
 import TableCell from '@mui/material/TableCell';
 import Table from "@mui/material/Table";
 import TableRow from '@mui/material/TableRow';
@@ -45,10 +46,13 @@ const ViewRequests = () => {
     <div className="listContainer">
       <Navbar/>
 
-          <div className="productTableTitle">
-            View Requests
-          
-          </div>
+             <div className="productTableTitle">
+                View Requests
+                <Link to="/soleDistributor/applications" style={{textDecoration:"none"}} className="newLink">
+                Manage Requests
+                </Link>
+              </div>
+          <div className="tableContainer">
           <TableContainer component={Paper} className="table">
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
@@ -82,6 +86,7 @@ const ViewRequests = () => {
               </Table>
           </TableContainer>
         </div>
+      </div>
       </div>
     </>
   );

@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from "react-router-dom";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
+import { Link } from 'react-router-dom';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 import Navbar from '../Components/navbar/Navbar';
 import Sidebar from '../Components/Sidebar/SoleSidebar';
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
 const SoleOrderHistory = () => {
+  const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [ordersPerPage] = useState(8); // Number of orders to display per page
 
   useEffect(() => {
     // Fetch orders from the backend
@@ -21,6 +24,19 @@ const SoleOrderHistory = () => {
       .then((data) => setOrders(data))
       .catch((error) => console.error('Error fetching orders:', error));
   }, []);
+
+  const indexOfLastOrder = currentPage * ordersPerPage;
+  const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
+  const currentOrders = orders.slice(indexOfFirstOrder, indexOfLastOrder);
+
+  const pageNumbers = [];
+  for (let i = 1; i <= Math.ceil(orders.length / ordersPerPage); i++) {
+    pageNumbers.push(i);
+  }
+
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   const handleAcceptOrder = (orderId) => {
     // Send a PUT request to accept the order
@@ -66,7 +82,6 @@ const SoleOrderHistory = () => {
       .catch((error) => console.error('Error rejecting order:', error));
   };
 
-
   return (
     <>
       <div className="list">
@@ -74,9 +89,7 @@ const SoleOrderHistory = () => {
         <div className="listContainer">
           <Navbar />
 
-          <div className="productTableTitle">
-            Orders
-          </div>
+          <div className="productTableTitle">Orders</div>
           <div className="tableContainer">
             <TableContainer component={Paper} className="table">
               <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -86,13 +99,15 @@ const SoleOrderHistory = () => {
                     <TableCell className="tableCell">Sole Distributor's Email</TableCell>
                     <TableCell className="tableCell">Address</TableCell>
                     <TableCell className="tableCell">Date</TableCell>
-                    <TableCell className="tableCell" >Status</TableCell>
-                    <TableCell className="tableCell" style={{display:'flex'}}>Order Details</TableCell>
+                    <TableCell className="tableCell">Status</TableCell>
+                    <TableCell className="tableCell" style={{ display: 'flex' }}>
+                      Order Details
+                    </TableCell>
                   </TableRow>
                 </TableHead>
 
                 <TableBody>
-                  {orders.map((item) => (
+                  {currentOrders.map((item) => (
                     <TableRow key={item._id}>
                       <TableCell className="tableCell">{item._id}</TableCell>
                       <TableCell className="tableCell">{item.userId.email}</TableCell>
@@ -123,13 +138,40 @@ const SoleOrderHistory = () => {
                         </div>
                       </TableCell>
                       <TableCell className="tableCell">
-                        <Link to={`/soleDistributor/orders/history/${item._id}`} className="detailLink">Details</Link>
+                        <Link to={`/soleDistributor/orders/history/${item._id}`} className="detailLink">
+                          Details
+                        </Link>
                       </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
               </Table>
             </TableContainer>
+            <div className="pagination">
+              <button
+                className="paginationButton"
+                onClick={() => paginate(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                Previous
+              </button>
+              {pageNumbers.map((number) => (
+                <button
+                  key={number}
+                  className={`paginationButton ${currentPage === number ? 'active' : ''}`}
+                  onClick={() => paginate(number)}
+                >
+                  {number}
+                </button>
+              ))}
+              <button
+                className="paginationButton"
+                onClick={() => paginate(currentPage + 1)}
+                disabled={indexOfLastOrder >= orders.length}
+              >
+                Next
+              </button>
+            </div>
           </div>
         </div>
       </div>

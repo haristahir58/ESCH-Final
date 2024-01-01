@@ -12,7 +12,7 @@
     cursor: pointer;
     transition: background-color 0.3s ease-in-out;
     position: relative;
-    left: 94px;
+    left: -66px;
     top: 21px;
   }
   
@@ -71,10 +71,7 @@
   }
   
   
-  
-  .buttonLink:hover {
-    background-color: #0056b3; /* Change to your preferred button hover color */
-  }
+
   
   /* Center the container vertically and horizontally */
   .home-page {

@@ -68,8 +68,7 @@ const ShopNavbar = () => {
             </Link>
           </li>
 
-              <li><Link to="/shopkeeper/complain" style={{textDecoration:'none',color:'black',fontSize:'18px'}}>Add Complain</Link></li>
-              <li><Link to="/shopkeeper/view-complain" style={{textDecoration:'none',color:'black',fontSize:'18px'}}>View Complain</Link></li>
+              <li><Link to="/shopkeeper/view-complain" style={{textDecoration:'none',color:'black',fontSize:'18px'}}>Complains</Link></li>
               <li><Link to="/shopkeeper/orders" style={{textDecoration:'none',color:'black',fontSize:'18px'}}>View Order</Link></li>
               <li><Link to="/shopkeeper/orders/history" style={{textDecoration:'none',color:'black',fontSize:'18px'}}>Order history</Link></li>
               <li><Link to="/shopkeeper/logout" style={{textDecoration:'none',color:'black',fontSize:'18px'}}>Logout</Link></li>

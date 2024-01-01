@@ -1,5 +1,6 @@
 import React, { useState,useEffect } from 'react';
 import {useNavigate} from "react-router-dom";
+import Footer from "./ShopFooter";
 import Navbar from './ShopNavbar'
 import { useCart } from '../../Sole Distributor/Components/Cart/CartContext';
 
@@ -65,6 +66,8 @@ const ShopkeeperCheckout = ({inputs, title}) => {
 
   return (
 <>
+<div className="new">
+<div className="newContainer">
         <Navbar/>
         <div className="top">
           <h1>Checkout</h1>
@@ -111,6 +114,9 @@ const ShopkeeperCheckout = ({inputs, title}) => {
 
           </div>
         </div>
+        </div>
+        </div>
+        <Footer />
         </>
  
   )

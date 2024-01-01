@@ -14,7 +14,7 @@ export default function AddComplain() {
 
   useEffect(() => {
     // Fetch the list of products from your API
-    fetch('/admin/products')
+    fetch('/shopkeeper/products-display')
       .then((response) => response.json())
       .then((data) => {
         setProducts(data);
@@ -58,16 +58,6 @@ export default function AddComplain() {
         <div className="add-complain-container">
           <h2 className="add-complain-heading">Add Complaint</h2>
 
-          <label htmlFor="title" className="add-complain-label">
-            Title:
-          </label>
-          <input
-            type="text"
-            id="title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="add-complain-input"
-          />
 
           <label htmlFor="productId" className="add-complain-label">
             Product:
@@ -85,6 +75,19 @@ export default function AddComplain() {
               </option>
             ))}
           </select>
+
+
+          <label htmlFor="title" className="add-complain-label">
+            Title:
+          </label>
+          <input
+            type="text"
+            id="title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="add-complain-input"
+          />
+
 
           <button onClick={handleComplain} className="add-complain-button">
             Add Complaint

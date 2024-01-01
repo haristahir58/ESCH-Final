@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../navbar/Navbar";
 import Sidebar from "../Sidebar/DisSidebar";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
 
 export default function ManageComplaints() {
   const [complaints, setComplaints] = useState([]);
@@ -58,35 +65,43 @@ export default function ManageComplaints() {
         <Sidebar />
         <div className="homeContainer">
           <Navbar />
+          <div className="productTableTitle">
+                Complaints
 
-          <table className="table">
-            <thead>
-              <tr>
-                <th className="tableCell">Complain ID</th>
-                <th className="tableCell">Complain Title</th>
-                <th className="tableCell">Product</th>
-                <th className="tableCell">Status</th>
-                <th className="tableCell">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {complaints.map((complaint) => (
-                <tr key={complaint.id}>
-                  <td className="tableCell">{complaint._id}</td>
-                  <td className="tableCell">{complaint.title}</td>
-                  <td className="tableCell">{complaint.productId.title}</td>
-                  <td className="tableCell">
-                    <span className={`status ${complaint.status}`}>{complaint.status}</span>
-                  </td>
-                  <td className="tableCell">
-                    <button className="buttonLink" onClick={() => handleAction(complaint._id, "resolve")}>Resolve</button>
-                    <button className="buttonLink" onClick={() => handleAction(complaint._id, "reject")}>Reject</button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+              </div>
+          <div className="tableContainer">
+
+          <TableContainer component={Paper} className="table">
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell className="tableCell">Complaint ID</TableCell>
+                  <TableCell className="tableCell">Complaint Title</TableCell>
+                  <TableCell className="tableCell">Product</TableCell>
+                  <TableCell className="tableCell">Status</TableCell>
+                  <TableCell className="tableCell" style={{textAlign: "start"}}>Action</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {complaints.map((complaint) => (
+                  <TableRow key={complaint.id}>
+                    <TableCell className="tableCell">{complaint._id}</TableCell>
+                    <TableCell className="tableCell">{complaint.title}</TableCell>
+                    <TableCell className="tableCell">{complaint.productId.title}</TableCell>
+                    <TableCell className="tableCell">
+                      <span className={`status ${complaint.status}`}>{complaint.status}</span>
+                    </TableCell>
+                    <TableCell className="tableCell">
+                      <button className="buttonLink" onClick={() => handleAction(complaint._id, "resolve")}>Resolve</button>
+                      <button className="buttonLink" onClick={() => handleAction(complaint._id, "reject")}>Reject</button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </div>
+      </div>
       </div>
     </>
   );

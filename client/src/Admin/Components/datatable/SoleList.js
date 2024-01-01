@@ -84,7 +84,7 @@ const SoleList = () => {
           <TableCell className="tableCell">Profession</TableCell>
           <TableCell className="tableCell">Address</TableCell>
           <TableCell className="tableCell">Country</TableCell>
-          <TableCell className="tableCell">Operations</TableCell>
+          {/* <TableCell className="tableCell">Operations</TableCell> */}
         </TableRow>
       </TableHead>
 
@@ -99,9 +99,9 @@ const SoleList = () => {
             <TableCell className="tableCell">{item.profession}</TableCell>
             <TableCell className="tableCell">{item.address}</TableCell>
             <TableCell className="tableCell">{item.country}</TableCell>
-            <TableCell className="tableCell">
+            {/* <TableCell className="tableCell">
               <Link  className="buttonLink">Details</Link>
-            </TableCell>
+            </TableCell> */}
           </TableRow>
         </TableBody>
       ))}

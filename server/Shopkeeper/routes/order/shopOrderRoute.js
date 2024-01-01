@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const router = express.Router();
 const ShopkeeperOrder = require('../../model/order/ShopkeeperOrder');
 const authenticate = require("../../../Distributor/middleware/authenticate")
+const Product = require('../../../Admin/model/Products/productSchema')
 const Sell = require('../../../SoleDistributor/model/Sell/sellSchema')
 
 router.post('/shopkeeper/placeOrder', async (req, res) => {
@@ -351,52 +352,79 @@ router.get('/distributor/orders/:id', authenticate, async (req, res) => {
 });
 
 
-// Update order status and adjust product quantities
+// Accept or reject
+// Accept or reject
 router.put('/distributor/orders/:id', authenticate, async (req, res) => {
   try {
+    const { action } = req.body; // Expect 'action' to be 'accept' or 'reject'
     const orderId = req.params.id;
-    const { status } = req.body;
 
-    // Validate if the required fields are present
-    if (!orderId || !status) {
-      return res.status(400).json({ error: 'Invalid request. Please provide orderId and status.' });
-    }
-
-    const order = await ShopkeeperOrder.findById(orderId).populate({
-      path: 'orderItems.product',
-      model: 'Products', // Adjust the model name as needed
-    });
+    const order = await ShopkeeperOrder.findById(orderId);
 
     if (!order) {
-      return res.status(404).json({ message: 'Order not found' });
+      return res.status(404).json({ error: "Order not found" });
     }
 
-    // Update order status
-    order.status = status;
+    if (action === "accept") {
+      // Check if the order is already accepted or rejected
+      if (order.status === 'accepted' || order.status === 'rejected') {
+        return res.status(400).json({ error: "Order has already been processed" });
+      }
+
+      // Check product quantities
+      for (const orderItem of order.orderItems) {
+        const { product, quantity } = orderItem;
+
+        const productDoc = await Product.findById(product);
+
+        // Ensure there is enough stock
+        if (!productDoc || productDoc.quantity < quantity) {
+          return res.status(400).json({ message: `Insufficient stock for product ${productDoc ? productDoc.title : 'unknown'}` });
+        }
+
+        // Subtract ordered quantity from product's quantity
+        productDoc.quantity -= quantity;
+        await productDoc.save();
+      }
+
+      // If all checks pass, mark the order as "accepted"
+      order.status = 'accepted';
+    } else if (action === "reject") {
+      if (order.status === 'accepted' || order.status === 'rejected') {
+        return res.status(400).json({ error: "Order has already been processed" });
+      }
+      // Mark the order as "rejected"
+      order.status = 'rejected';
+    } else {
+      return res.status(400).json({ error: "Invalid action" });
+    }
+
+    // Save the updated order to change the status
     await order.save();
 
-    // If the order is accepted, adjust product quantities in the distributor's inventory
-    if (status === 'accepted') {
-      for (const item of order.orderItems) {
-        const product = item.product;
-        const existingSell = await Sell.findOne({ product: product._id, status: 'accepted' });
+    // Update the distributor's product quantities based on the accepted order
+    if (action === "accept") {
+      for (const orderItem of order.orderItems) {
+        const { product, quantity } = orderItem;
 
-        if (existingSell && existingSell.quantity >= item.quantity) {
-          // Subtract ordered quantity from Sell model
-          existingSell.quantity -= item.quantity;
-          await existingSell.save();
-        } else {
-          return res.status(400).json({ error: 'Insufficient stock for one or more products' });
+        const distributorProduct = await Sell.findOne({ product, status: "accepted" });
+
+        if (distributorProduct) {
+          distributorProduct.quantity -= quantity;
+          await distributorProduct.save();
         }
       }
     }
 
-    res.status(200).json({ message: 'Order status updated successfully' });
-  } catch (error) {
-    console.error('Error updating order status:', error);
-    res.status(500).json({ message: 'Error updating order status' });
+    res.json({ message: `Order has been ${action === "accept" ? "accepted" : "rejected"}` });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error processing order" });
   }
 });
+
+
+
 
 
 router.get('/shopkeeper/buyed-products', async (req, res) => {
@@ -431,6 +459,150 @@ router.get('/shopkeeper/buyed-products', async (req, res) => {
   }
 });
 
+//Sales
+
+router.get('/distributor/sales', async (req, res) => {
+  try {
+    // Count the number of accepted orders
+    const acceptedOrdersCount = await ShopkeeperOrder.countDocuments({
+      status: 'accepted'
+    });
+
+    // Send the count as a response
+    res.json({ acceptedOrdersCount });
+  } catch (error) {
+    console.error('Error counting accepted orders:', error);
+    res.status(500).json({ message: 'Error counting accepted orders' });
+  }
+});
+
+
+router.get('/distributor/monthlySales', authenticate, async (req, res) => {
+  try {
+    const monthlySales = await ShopkeeperOrder.aggregate([
+      {
+        $match: {
+          status: 'accepted',
+        },
+      },
+      {
+        $group: {
+          _id: {
+            $dateToString: { format: '%Y-%m', date: '$Date' }, // Extract year and month
+          },
+          Sales: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          month: '$_id',
+          Sales: 1,
+        },
+      },
+    ]);
+
+    // Create an array of all months from January to December
+    const allMonths = [
+      '2023-01', '2023-02', '2023-03', '2023-04', '2023-05', '2023-06',
+      '2023-07', '2023-08', '2023-09', '2023-10', '2023-11', '2023-12', '2024-01', '2024-02'
+    ];
+
+    const monthlySalesMap = new Map();
+    for (const month of allMonths) {
+      monthlySalesMap.set(month, 0);
+    }
+
+
+    for (const salesData of monthlySales) {
+      monthlySalesMap.set(salesData.month, salesData.Sales);
+    }
+
+    // Convert the map to an array of objects
+    const result = Array.from(monthlySalesMap, ([month, Sales]) => ({ month, Sales }));
+
+    res.json(result);
+  } catch (error) {
+    console.error('Error fetching monthly earnings data:', error);
+    res.status(500).json({ message: 'Error fetching monthly earnings data' });
+  }
+});
+
+
+router.get('/distributor/todaySales', authenticate, async (req, res) => {
+  try {
+    
+    // Get the start and end of the current day in the sole distributor's timezone
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Set time to start of the day
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1); // Set time to start of the next day
+
+
+    // Find the sales for today with status 'accepted'
+    const todaySales = await ShopkeeperOrder.countDocuments({
+      status: 'accepted',
+      Date: { $gte: today, $lt: tomorrow },
+    });
+
+    res.json({ todaySales });
+  } catch (error) {
+    console.error('Error fetching today\'s sales data:', error);
+    res.status(500).json({ message: 'Error fetching today\'s sales data' });
+  }
+});
+
+
+router.get('/distributor/lastWeekSales', authenticate, async (req, res) => {
+  try {
+   
+    // Get the start and end of the last week in the sole distributor's timezone
+    const lastWeekStart = new Date();
+    lastWeekStart.setDate(lastWeekStart.getDate() - 7);
+    lastWeekStart.setHours(0, 0, 0, 0);
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+
+    // Find the sales for last week with status 'accepted'
+    const lastWeekSales = await ShopkeeperOrder.countDocuments({
+      status: 'accepted',
+      Date: { $gte: lastWeekStart, $lt: today },
+    });
+
+    res.json({ lastWeekSales });
+  } catch (error) {
+    console.error('Error fetching last week\'s sales data:', error);
+    res.status(500).json({ message: 'Error fetching last week\'s sales data' });
+  }
+});
+
+
+router.get('/distributor/lastMonthSales', authenticate, async (req, res) => {
+  try {
+
+    // Get the start and end of the last month in the sole distributor's timezone
+    const lastMonthStart = new Date();
+    lastMonthStart.setMonth(lastMonthStart.getMonth() - 1);
+    lastMonthStart.setHours(0, 0, 0, 0);
+
+    const currentMonthStart = new Date();
+    currentMonthStart.setHours(0, 0, 0, 0);
+
+
+    // Find the sales for last month with status 'accepted'
+    const lastMonthSales = await ShopkeeperOrder.countDocuments({
+      status: 'accepted',
+      Date: { $gte: lastMonthStart, $lt: currentMonthStart },
+    });
+
+    res.json({ lastMonthSales });
+  } catch (error) {
+    console.error('Error fetching last month\'s sales data:', error);
+    res.status(500).json({ message: 'Error fetching last month\'s sales data' });
+  }
+});
 
 
 

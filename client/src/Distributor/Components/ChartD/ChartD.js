@@ -11,13 +11,13 @@ import "../../../Admin/Components/chart/chart.scss"
 
 
 
-const ChartS = ({ aspect, title }) => {
+const ChartD = ({ aspect, title }) => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/soleDistributor/monthlySales');
+        const response = await fetch('/distributor/monthlySales');
         const result = await response.json();
         setData(result);
       } catch (error) {
@@ -40,8 +40,8 @@ const ChartS = ({ aspect, title }) => {
         >
           <defs>
             <linearGradient id="total" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#107b9f" stopOpacity={0.8} />
-              <stop offset="95%" stopColor="#107b9f" stopOpacity={0} />
+              <stop offset="5%" stopColor="#081fa0" stopOpacity={0.8} />
+              <stop offset="95%" stopColor="#081fa0" stopOpacity={0} />
             </linearGradient>
           </defs>
           <XAxis dataKey="month" stroke="gray" />
@@ -50,7 +50,7 @@ const ChartS = ({ aspect, title }) => {
           <Area
             type="monotone"
             dataKey="Sales"
-            stroke="#107b9f"
+            stroke="#081fa0"
             fillOpacity={1}
             fill="url(#total)"
           />
@@ -60,4 +60,4 @@ const ChartS = ({ aspect, title }) => {
   );
 };
 
-export default ChartS;
+export default ChartD;
